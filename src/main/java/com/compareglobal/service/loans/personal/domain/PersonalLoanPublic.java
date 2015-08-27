@@ -116,4 +116,8 @@ public class PersonalLoanPublic {
     public void setProduct(JSONObject product) {
         this.product = product;
     }
+
+    public PersonalLoan getPersonalLoan() {
+        return personalLoan;
+    }
 }

@@ -1,5 +1,52 @@
 {
 "id"  :"{{personalLoan.id}}",
 "locale" : "{{personalLoan.locale}}",
-"name" :"{{personalLoan.name}}"
+"name" :"{{personalLoan.name}}",
+"company" : {
+  "name" : "{{personalLoan.provider.name}}",
+  "logo":
+  {{#each personalLoan.images}}
+    {{#isIn typeValue filter="product_icon"}}
+        "{{this.url}}"
+    {{/isIn}}
+  {{~/each}}
+},
+"product": {
+ "productImage":
+{{#each personalLoan.images}}
+    {{#isIn typeValue filter="product_icon"}}
+        "{{this.url}}"
+    {{/isIn}}
+{{~/each}},
+ "productLink":
+    "{{#defaultFilter personalLoan.images filter="product_link, url"}}
+    {{/defaultFilter}}"
+},
+"handlingFee": {
+ "hasNoHandlingFee": false,
+ "handlingfeewaiverlogo": false
+},
+"apply":{
+"mobileApplyLink": "",
+"hasApplyBtn": false
+},
+"logo" : {
+"icon":
+{{#each personalLoan.images}}
+    {{#isIn typeValue filter="product_icon"}}
+        "{{this.url}}"
+    {{/isIn}}
+{{~/each}},
+"companyMobileLogo":
+{{#each personalLoan.images}}
+    {{#isIn typeValue filter="product_icon"}}
+        "{{this.url}}"
+    {{/isIn}}
+{{~/each}}
+},
+"promotions":{
+"hasPromo": true,
+"showPromoTooltip": true,
+"showPromoLogo": false
+}
 }

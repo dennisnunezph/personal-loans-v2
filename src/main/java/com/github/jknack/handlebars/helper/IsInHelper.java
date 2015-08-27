@@ -39,6 +39,7 @@ public class IsInHelper implements Helper<Object> {
                         && sanitizedFilters.contains(context)) {
                     return options.fn();
                 }
+
             }
 
             return options.inverse();

@@ -2,6 +2,7 @@ package com.compareglobal.service.loans.personal;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.helper.ContainsHelper;
+import com.github.jknack.handlebars.helper.DefaultFilterHelper;
 import com.github.jknack.handlebars.helper.IsInHelper;
 import com.github.jknack.handlebars.io.TemplateLoader;
 import com.github.jknack.handlebars.springmvc.SpringTemplateLoader;
@@ -34,7 +35,8 @@ public class Application {
 		Handlebars handlebars = new Handlebars(loader);
 
 		handlebars = handlebars.registerHelper(IsInHelper.NAME, IsInHelper.INSTANCE)
-				.registerHelper(ContainsHelper.NAME, ContainsHelper.INSTANCE);
+				.registerHelper(ContainsHelper.NAME, ContainsHelper.INSTANCE)
+				.registerHelper(DefaultFilterHelper.NAME, DefaultFilterHelper.INSTANCE);
 		return handlebars;
 	}
 
