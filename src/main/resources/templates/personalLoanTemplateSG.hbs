@@ -11,7 +11,7 @@
     {{/isIn}}
   {{~/each}}
 },
-"product": {
+"productInfo": {
  "productImage":
 {{#each personalLoan.images}}
     {{#isIn typeValue filter="product_icon"}}
@@ -48,5 +48,15 @@
 "hasPromo": true,
 "showPromoTooltip": true,
 "showPromoLogo": false
-}
+},
+"fees":{
+"earlyRepaymentfee": false
+},
+"benefits" :  [
+{{#each sortedBenefits}}
+    {{#if description }}
+            "{{description}}",
+    {{/if}}
+{{~/each}}
+]
 }

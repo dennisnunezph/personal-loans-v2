@@ -10,6 +10,7 @@ import com.compareglobal.service.loans.personal.domain.Compare;
 import com.compareglobal.service.loans.personal.domain.PersonalLoan;
 import com.compareglobal.service.loans.personal.domain.PersonalLoanPublic;
 import com.compareglobal.service.loans.personal.service.CompareService;
+import com.compareglobal.service.loans.personal.transform.PersonalLoanTransformer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -63,10 +64,12 @@ public class HomeController {
     public Object template(@RequestBody final Compare compare, BindingResult result) throws IOException {
 
         List<PersonalLoan> personalLoans = compareService.compare(compare);
+        PersonalLoanTransformer loanTransformer = new PersonalLoanTransformer();
+        List<PersonalLoanPublic> personalLoanFiltered = loanTransformer.filteredList(personalLoans, compare);
+
         Template template = handlebars.compile("personalLoanTemplate" + compare.getCountrySuffix());
         List<Object> resultTemplate = new ArrayList<>();
-        for (PersonalLoan personalLoan : personalLoans) {
-            PersonalLoanPublic loanPublic = new PersonalLoanPublic(personalLoan);
+        for (PersonalLoanPublic loanPublic : personalLoanFiltered) {
             String templateResult = template.apply(loanPublic).replaceAll("\n", "")
                     .replaceAll(" },]", "}]")
                     .replaceAll("&quot;", "\"\"");

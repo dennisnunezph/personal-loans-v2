@@ -31,6 +31,7 @@ public class PersonalLoanPublic {
     private List<Item> featured;
     private List<Item> promotions;
     private JSONObject product;
+    private List<Benefit> sortedBenefits;
 
     public PersonalLoanPublic() {
     }
@@ -119,5 +120,13 @@ public class PersonalLoanPublic {
 
     public PersonalLoan getPersonalLoan() {
         return personalLoan;
+    }
+
+    public void setSortedBenefits(List<Benefit> sortedBenefits) {
+        this.sortedBenefits = sortedBenefits;
+    }
+
+    public List<Benefit> getSortedBenefits() {
+        return sortedBenefits;
     }
 }
