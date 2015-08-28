@@ -3,28 +3,28 @@
 "locale" : "{{personalLoan.locale}}",
 "name" :"{{personalLoan.name}}",
 "company" : {
-  "name" : "{{personalLoan.provider.name}}",
-  "logo":
-  {{#each personalLoan.images}}
+"name" : "{{personalLoan.provider.name}}",
+"logo":
+{{#each personalLoan.images}}
     {{#isIn typeValue filter="product_icon"}}
         "{{this.url}}"
     {{/isIn}}
-  {{~/each}}
+{{~/each}}
 },
 "productInfo": {
- "productImage":
+"productImage":
 {{#each personalLoan.images}}
     {{#isIn typeValue filter="product_icon"}}
         "{{this.url}}"
     {{/isIn}}
 {{~/each}},
- "productLink":
-    "{{#defaultFilter personalLoan.images filter="product_link, url"}}
-    {{/defaultFilter}}"
+"productLink":
+"{{#defaultFilter personalLoan.images filter="product_link, url"}}
+{{/defaultFilter}}"
 },
 "handlingFee": {
- "hasNoHandlingFee": false,
- "handlingfeewaiverlogo": false
+"hasNoHandlingFee": false,
+"handlingfeewaiverlogo": false
 },
 "apply":{
 "mobileApplyLink": "",
@@ -52,11 +52,13 @@
 "fees":{
 "earlyRepaymentfee": false
 },
-"benefits" :  [
-{{#each sortedBenefits}}
-    {{#if description }}
-            "{{description}}",
-    {{/if}}
+"ranking": [
+{{#each ranking}}
+    {"{{key}}": "{{value}}"},
 {{~/each}}
-]
+],
+"fees": [
+{{#each sortedBenefits}}
+    {{#if description }}"{{description}}",{{/if}}
+{{~/each}}]
 }

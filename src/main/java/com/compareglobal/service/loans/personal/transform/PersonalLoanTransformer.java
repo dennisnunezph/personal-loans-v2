@@ -2,33 +2,39 @@ package com.compareglobal.service.loans.personal.transform;
 
 import com.compareglobal.service.loans.personal.domain.Compare;
 import com.compareglobal.service.loans.personal.domain.PersonalLoan;
-import com.compareglobal.service.loans.personal.domain.PersonalLoanPublic;
+import com.compareglobal.service.loans.personal.domain.PersonalLoanTemplate;
 import com.compareglobal.service.loans.personal.domain.benefits.Benefit;
-import static org.boon.sort.Sorting.sort;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by dennis on 8/27/15.
  */
 public class PersonalLoanTransformer {
 
-    private static final String TYPE_VALUE = "typeValue";
-    private static final String TYPE_KEY = "typeKey";
-
-    public List<PersonalLoanPublic> filteredList(List<PersonalLoan> personalLoans, Compare compare) {
-        List<PersonalLoanPublic>  filteredList = new ArrayList<>();
+    public List<PersonalLoanTemplate> filteredList(List<PersonalLoan> personalLoans, Compare compare) {
+        List<PersonalLoanTemplate>  filteredList = new ArrayList<>();
         for (PersonalLoan personalLoan : personalLoans) {
             filteredList.add(sortedValue(personalLoan));
         }
         return filteredList;
     }
 
-    public PersonalLoanPublic sortedValue(PersonalLoan personalLoan) {
-        PersonalLoanPublic personalLoanPublic = new PersonalLoanPublic(personalLoan);
-        List<Benefit> sortedBenefits = (List<Benefit>) sort(Benefit.class, personalLoan.getBenefitsList(), TYPE_VALUE);
-        personalLoanPublic.setSortedBenefits(sortedBenefits);
-        return personalLoanPublic;
+    public PersonalLoanTemplate sortedValue(PersonalLoan personalLoan) {
+        PersonalLoanTemplate loanTemplate = new PersonalLoanTemplate(personalLoan);
+
+        loanTemplate.setSortedBenefits(personalLoan.getBenefitsList().stream()
+                               .sorted(Comparator.comparing(Benefit::getTypeValue))
+                               .collect(Collectors.toList()));
+        loanTemplate.setRanking(personalLoan.getRankings().stream()
+                               .map(ranking -> Pair.of(ranking.getTypeValue(), ranking.getRankValue()))
+                               .collect(Collectors.toList()));
+
+        return loanTemplate;
     }
 
     /**

@@ -9,6 +9,7 @@ import com.compareglobal.service.common.domain.RetrieveList;
 import com.compareglobal.service.loans.personal.domain.Compare;
 import com.compareglobal.service.loans.personal.domain.PersonalLoan;
 import com.compareglobal.service.loans.personal.domain.PersonalLoanPublic;
+import com.compareglobal.service.loans.personal.domain.PersonalLoanTemplate;
 import com.compareglobal.service.loans.personal.service.CompareService;
 import com.compareglobal.service.loans.personal.transform.PersonalLoanTransformer;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -65,11 +66,11 @@ public class HomeController {
 
         List<PersonalLoan> personalLoans = compareService.compare(compare);
         PersonalLoanTransformer loanTransformer = new PersonalLoanTransformer();
-        List<PersonalLoanPublic> personalLoanFiltered = loanTransformer.filteredList(personalLoans, compare);
+        List<PersonalLoanTemplate> personalLoanFiltered = loanTransformer.filteredList(personalLoans, compare);
 
         Template template = handlebars.compile("personalLoanTemplate" + compare.getCountrySuffix());
         List<Object> resultTemplate = new ArrayList<>();
-        for (PersonalLoanPublic loanPublic : personalLoanFiltered) {
+        for (PersonalLoanTemplate loanPublic : personalLoanFiltered) {
             String templateResult = template.apply(loanPublic).replaceAll("\n", "")
                     .replaceAll(" },]", "}]")
                     .replaceAll("&quot;", "\"\"");
