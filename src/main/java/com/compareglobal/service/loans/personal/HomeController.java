@@ -6,11 +6,9 @@ package com.compareglobal.service.loans.personal;
 
 import com.compareglobal.service.common.domain.Provider;
 import com.compareglobal.service.common.domain.RetrieveList;
-import com.compareglobal.service.loans.personal.domain.Compare;
-import com.compareglobal.service.loans.personal.domain.PersonalLoan;
-import com.compareglobal.service.loans.personal.domain.PersonalLoanPublic;
-import com.compareglobal.service.loans.personal.domain.PersonalLoanTemplate;
+import com.compareglobal.service.loans.personal.domain.*;
 import com.compareglobal.service.loans.personal.service.CompareService;
+import com.compareglobal.service.loans.personal.service.LoanServiceFactory;
 import com.compareglobal.service.loans.personal.transform.PersonalLoanTransformer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,13 +42,16 @@ public class HomeController {
 
     private final CompareService compareService;
     private final Handlebars handlebars;
+    private final LoanServiceFactory serviceFactory;
 
 
     @Inject
     public HomeController(CompareService compareService,
-                          Handlebars handlebars) {
+                          Handlebars handlebars,
+                          LoanServiceFactory serviceFactory) {
         this.compareService = compareService;
         this.handlebars = handlebars;
+        this.serviceFactory = serviceFactory;
     }
 
     @RequestMapping(value = "/personalLoans", method = RequestMethod.GET, headers = DEFAULT_CONTENT_TYPE_CHARSET)
@@ -64,13 +65,22 @@ public class HomeController {
     @ResponseBody
     public Object template(@RequestBody final Compare compare, BindingResult result) throws IOException {
 
+        double loanAmount = Double.valueOf(compare.getLoanAmount());
+        int tenure = Integer.valueOf(compare.getLoanTenure());
+        String locale = compare.getLocale();
+
         List<PersonalLoan> personalLoans = compareService.compare(compare);
         PersonalLoanTransformer loanTransformer = new PersonalLoanTransformer();
         List<PersonalLoanTemplate> personalLoanFiltered = loanTransformer.filteredList(personalLoans, compare);
-
         Template template = handlebars.compile("personalLoanTemplate" + compare.getCountrySuffix());
         List<Object> resultTemplate = new ArrayList<>();
+
+        MonthlyPaymentHelper computationService = serviceFactory.getLoanComputationInstance(locale);
         for (PersonalLoanTemplate loanPublic : personalLoanFiltered) {
+
+            Mortgage loan = computationService.computeMortgage(loanAmount, tenure, loanPublic.getPersonalLoan());
+            loanPublic.setLoan(loan);
+
             String templateResult = template.apply(loanPublic).replaceAll("\n", "")
                     .replaceAll(" },]", "}]")
                     .replaceAll("&quot;", "\"\"");

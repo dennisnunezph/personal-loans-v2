@@ -12,6 +12,7 @@ public class PersonalLoanTemplate {
     private final PersonalLoan personalLoan;
     private List<Benefit> sortedBenefits;
     private List<Pair<String, String>> ranking;
+    private Mortgage loan;
 
     public PersonalLoanTemplate(PersonalLoan personalLoan) {
         this.personalLoan = personalLoan;
@@ -37,4 +38,11 @@ public class PersonalLoanTemplate {
         return personalLoan;
     }
 
+    public void setLoan(Mortgage loan) {
+        this.loan = loan;
+    }
+
+    public Mortgage getLoan() {
+        return loan;
+    }
 }

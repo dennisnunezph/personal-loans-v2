@@ -4,6 +4,8 @@
  */
 package com.compareglobal.service.loans.personal.service;
 
+import com.compareglobal.service.loans.personal.domain.MonthlyPaymentHelper;
+import com.compareglobal.service.loans.personal.domain.PersonalLoanHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -27,9 +29,22 @@ public class LoanServiceFactory {
         return (LoanService) context.getBean(loanServiceBeanName);
     }
 
-    private String getLoanServiceBeanName(final String locale) {
-        return "loanService" + getCountryFromLocale(locale);
+    public final MonthlyPaymentHelper getLoanComputationInstance(final String locale) {
+        final String serviceBeanName = getLoanServiceBeanName(locale);
+        if (!context.containsBean(serviceBeanName)) {
+            throw new IllegalStateException(serviceBeanName + " bean not implemented");
+        }
+        return (MonthlyPaymentHelper) context.getBean(serviceBeanName);
     }
+
+    private String getLoanServiceBeanName(final String locale) {
+        return getBeanName(locale, "monthlyPaymentHelper" );
+    }
+
+    private String getBeanName(final String locale, final String service) {
+        return service + getCountryFromLocale(locale);
+    }
+
 
     private String getCountryFromLocale(final String locale) {
         return locale.substring(3);
